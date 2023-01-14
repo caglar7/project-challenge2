@@ -8,11 +8,24 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    bool isInputActive = false;
+
+    private void Start()
+    {
+        EventManager.SetInputAvailable += SetInputActive;
+    }
+
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(isInputActive && Input.GetMouseButtonDown(0))
         {
-            EventManager.GeneratePlatformEvent();
+            isInputActive = false;
+            EventManager.PlatformStoppedEvent();
         }
+    }
+
+    private void SetInputActive(bool value)
+    {
+        isInputActive = value;
     }
 }
