@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolingPattern : MonoBehaviour
+public class PoolingPattern
 {
     private GameObject prefab;
     private Stack<GameObject> objPool = new Stack<GameObject>();

@@ -3,24 +3,25 @@
 public class PoolManager : MonoBehaviour
 {
     #region Singleton
-    public static PoolManager Instance = null;
+    public static PoolManager instance = null;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (instance == null) instance = this;
 
         StartCreation();
     }
     #endregion
 
     [Header("Objects For Pooling")]
-    public GameObject cube;
+    public GameObject platform;
 
     [Header("Pools")]
-    private PoolingPattern cubePool;
+    [HideInInspector] public PoolingPattern platformPool;
 
     void StartCreation()
     {
-
+        platformPool = new PoolingPattern(platform);
+        platformPool.FillPool(25);
     }
 }
