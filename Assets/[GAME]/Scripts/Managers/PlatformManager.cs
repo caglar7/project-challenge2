@@ -15,8 +15,15 @@ public class PlatformManager : MonoBehaviour
 
     [Header("Fields")]
     Vector3 nextSpawnPos;
+    Vector3 nextScale;
     PlatformObject currentPlatform;
     PlatformMover currentMover;
+    Slicer meshSlicer;
+
+    private void Awake()
+    {
+        meshSlicer = GetComponent<Slicer>();
+    }
 
     private void Start()
     {
@@ -34,6 +41,7 @@ public class PlatformManager : MonoBehaviour
         currentPlatform = platform.GetComponent<PlatformObject>();
         currentMover = platform.GetComponent<PlatformMover>();
         platform.transform.SetParent(parentObject);
+        platform.transform.localScale = (nextScale != Vector3.zero) ? nextScale : platform.transform.localScale;
 
         currentMover.StartMoving(GetSpawnPos(), 1f);
     }
@@ -60,7 +68,10 @@ public class PlatformManager : MonoBehaviour
             currentMover.StopMoving();
 
             // slice here and give a pos for player to go
-            // if slice fails and cube fall, player just go +zDiff
+            // if slice fails and entire cube falls, player just go +zDiff
+
+            // slice, get scale for next object spawn
+            nextScale = meshSlicer.SliceObject(currentPlatform.gameObject);
 
             EventManager.MovePlayerEvent(currentPlatform.transform.position);
         }

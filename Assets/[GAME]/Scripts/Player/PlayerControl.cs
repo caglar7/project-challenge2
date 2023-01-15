@@ -9,12 +9,10 @@ public class PlayerControl : MonoBehaviour
 
     [Header("Fields")]
     PlayerMover mover;
-    PlayerAnimation anim;
 
     private void Awake()
     {
         mover = GetComponent<PlayerMover>();
-        anim = GetComponent<PlayerAnimation>();
     }
 
     private void Start()

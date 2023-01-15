@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Animator animator;
 
-    // Update is called once per frame
-    void Update()
+    public void TriggerAnimation(AnimationType type)
     {
-        
+        animator.SetTrigger(type.ToString());
     }
+}
+
+public enum AnimationType
+{
+    Running,
+    Idle,
 }
