@@ -72,8 +72,10 @@ public class PlatformManager : MonoBehaviour
 
             // slice, get scale for next object spawn
             nextScale = meshSlicer.SliceObject(currentPlatform.gameObject);
+            Vector3 playerNextPos = meshSlicer.RemainingObjectPosition();
 
-            EventManager.MovePlayerEvent(currentPlatform.transform.position);
+            if (playerNextPos == Vector3.zero) EventManager.MovePlayerForwardEvent(zDiff);
+            else EventManager.MovePlayerEvent(playerNextPos);
         }
     }
 }

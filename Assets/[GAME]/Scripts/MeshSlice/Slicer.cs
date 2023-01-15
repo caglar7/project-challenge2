@@ -9,62 +9,124 @@ using UnityEngine;
 
 public class Slicer : MonoBehaviour
 {
+    #region Properties
     [SerializeField] GameObject refObject;
+    [SerializeField] float perfectThreshold = .2f;
+    [SerializeField] float failThreshold = .1f;
     List<Transform> cutObjects = new List<Transform>();
+    Vector3 resultScale; 
+    #endregion
 
-    public void SetReferenceObject(GameObject g)
-    {
-        refObject = g;
-    }
-    
+    #region Slice Method
     /// <summary>
-    /// get remaining platform part
+    /// 
+    /// slice conditions
+    /// checking perfect fit, fail or slicing
+    /// 
     /// </summary>
-    /// <param name="g"></param>
+    /// <param name="movingObject"> the object that was moving and stopped to slice </param>
     /// <returns> scale of remaining platform for platform generator </returns>
-    public Vector3 SliceObject(GameObject g)
+    public Vector3 SliceObject(GameObject movingObject)
     {
-        Vector3 resultScale = g.transform.localScale;
+        resultScale = movingObject.transform.localScale;
 
-        var sliceable = g.GetComponent<IBzSliceable>();
+        var sliceable = movingObject.GetComponent<IBzSliceable>();
         if (sliceable == null) return resultScale;
 
         Bounds refBounds = refObject.GetComponent<MeshRenderer>().bounds;
-        Bounds movingBounds = g.GetComponent<MeshRenderer>().bounds;
-        float disLeft = -(refBounds.center.x - refBounds.extents.x);
-        float disRight = (refBounds.center.x - refBounds.extents.x);
+        Bounds movingBounds = movingObject.GetComponent<MeshRenderer>().bounds;
+        float disLeft = refBounds.center.x - refBounds.extents.x;
+        float disRight = refBounds.center.x + refBounds.extents.x;
+        float centerDiffX = Mathf.Abs(refBounds.center.x - movingBounds.center.x);
+        float widthX = refBounds.extents.x * 2f;
 
-        // just 2 condition for now, later gonna have, perfect fit, no cut fail, small cut fail
+        if (Mathf.Abs(movingBounds.center.x - refBounds.center.x) <= perfectThreshold)
+        {
+            PerfectFit(movingObject, refBounds, movingBounds);
+        }
+        else if (centerDiffX >= (widthX - failThreshold))
+        {
+            Fail(movingObject);
+        }
+        else
+        {
+            SliceMethod(sliceable, refBounds, movingBounds, disLeft, disRight);
+        }
+
+        return resultScale;
+    } 
+    #endregion
+
+    #region Slice Condition Methods
+
+    private void Fail(GameObject movingObject)
+    {
+        cutObjects.Clear();
+        movingObject.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    private void PerfectFit(GameObject movingObject, Bounds refBounds, Bounds movingBounds)
+    {
+        Vector3 nextMeshPos = refBounds.center;
+        nextMeshPos.z = movingBounds.center.z;
+
+        Vector3 meshMinusPivot = movingBounds.center - movingObject.transform.position;
+        movingObject.transform.position = nextMeshPos - meshMinusPivot;
+
+        refObject = movingObject;
+    }
+
+    private void SliceMethod(IBzSliceable sliceable, Bounds refBounds, Bounds movingBounds, float disLeft, float disRight)
+    {
         if (movingBounds.center.x < refBounds.center.x)
         {
-            sliceable.Slice(new Plane(Vector3.right, disLeft), SetCutObjects);
+            sliceable.Slice(new Plane(Vector3.right, -disLeft), SetCutObjects);
             if (cutObjects.Count > 0)
             {
-                cutObjects[0].GetComponent<Rigidbody>().isKinematic = false;
-                SetReferenceObject(cutObjects[1].gameObject);
+                cutObjects[0].GetComponent<Rigidbody>().isKinematic = false;    // later method, handle fallen obj
+                refObject = cutObjects[1].gameObject;
                 resultScale = cutObjects[1].GetComponent<MeshRenderer>().bounds.extents * 2f;
             }
         }
 
         else if (movingBounds.center.x > refBounds.center.x)
         {
-            sliceable.Slice(new Plane(Vector3.right, disRight), SetCutObjects);
+            sliceable.Slice(new Plane(Vector3.right, -disRight), SetCutObjects);
             if (cutObjects.Count > 0)
             {
                 cutObjects[1].GetComponent<Rigidbody>().isKinematic = false;
-                SetReferenceObject(cutObjects[0].gameObject);
+                refObject = cutObjects[0].gameObject;
                 resultScale = cutObjects[0].GetComponent<MeshRenderer>().bounds.extents * 2f;
             }
         }
-
-
-        return resultScale;
     }
 
+    #endregion
+
+    #region Get Sliced Objects
+
+    /// <summary>
+    /// slice method callback
+    /// handling cutObjects list
+    /// </summary>
+    /// <param name="result"></param>
     private void SetCutObjects(BzSliceTryResult result)
     {
         cutObjects.Clear();
-        if(result.outObjectNeg) cutObjects.Add(result.outObjectNeg.transform);
-        if(result.outObjectPos) cutObjects.Add(result.outObjectPos.transform);
+        if (result.outObjectNeg) cutObjects.Add(result.outObjectNeg.transform);
+        if (result.outObjectPos) cutObjects.Add(result.outObjectPos.transform);
     }
+    #endregion
+
+    #region Get Position Data
+    /// <summary>
+    ///  returning value is used for passing next position to player to move
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 RemainingObjectPosition()
+    {
+        if (cutObjects.Count > 0) return refObject.GetComponent<MeshRenderer>().bounds.center;
+        return Vector3.zero;
+    } 
+    #endregion
 }

@@ -31,6 +31,9 @@ public class PlayerMover : MonoBehaviour
             {
                 isReached = true;
 
+                // check continue, win or lose conditions
+                // ...
+
                 // trigger events       
                 EventManager.GeneratePlatformEvent();   // temp
                 EventManager.SetInputAvailableEvent(true);

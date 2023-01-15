@@ -19,10 +19,19 @@ public class PlayerControl : MonoBehaviour
     {
         MoveToPosition(initTarget.position);
         EventManager.MovePlayer += MoveToPosition;
+        EventManager.MovePlayerForward += MoveForward;
     }
 
     private void MoveToPosition(Vector3 pos)
     {
         mover.Move(pos);
     }
+
+    private void MoveForward(float dis)
+    {
+        Vector3 pos = transform.position;
+        pos.z += dis;
+        mover.Move(pos);
+    }
+
 }

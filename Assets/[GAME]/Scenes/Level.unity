@@ -572,6 +572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   refObject: {fileID: 2046610294}
+  perfectThreshold: 0.2
 --- !u!1 &1129070286
 GameObject:
   m_ObjectHideFlags: 0

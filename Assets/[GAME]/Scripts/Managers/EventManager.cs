@@ -9,6 +9,7 @@ public class EventManager : MonoBehaviour
     public static event Action<bool> SetInputAvailable;
     public static event Action PlatformStopped;
     public static event Action<Vector3> MovePlayer;
+    public static event Action<float> MovePlayerForward;
 
     public static void GeneratePlatformEvent()
     {
@@ -28,5 +29,10 @@ public class EventManager : MonoBehaviour
     public static void MovePlayerEvent(Vector3 target)
     {
         MovePlayer?.Invoke(target);
+    }
+
+    public static void MovePlayerForwardEvent(float dis)
+    {
+        MovePlayerForward?.Invoke(dis);
     }
 }
