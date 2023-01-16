@@ -5,14 +5,18 @@ using System;
 
 public class EventManager : MonoBehaviour
 {
+    // game play events
     public static event Action GeneratePlatform;    // when player moves to spot and checks
     public static event Action<bool> SetInputAvailable;
     public static event Action PlatformStopped;
     public static event Action<Vector3> MovePlayer;
     public static event Action<float> MovePlayerForward;
+
+    // level check condition events
     public static event Action CheckGameCondition;
     public static event Action LevelWin;
     public static event Action LevelFailed;
+
 
     public static void GeneratePlatformEvent()
     {

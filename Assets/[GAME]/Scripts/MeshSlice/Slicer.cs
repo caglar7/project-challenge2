@@ -53,6 +53,10 @@ public class Slicer : MonoBehaviour
             SliceMethod(sliceable, refBounds, movingBounds, disLeft, disRight);
         }
 
+        // testing
+        // play notes
+        AudioManager.instance.PlayNote(.1f);
+
         return resultScale;
     } 
     #endregion
@@ -74,6 +78,7 @@ public class Slicer : MonoBehaviour
         movingObject.transform.position = nextMeshPos - meshMinusPivot;
 
         refObject = movingObject;
+
     }
 
     private void SliceMethod(IBzSliceable sliceable, Bounds refBounds, Bounds movingBounds, float disLeft, float disRight)
