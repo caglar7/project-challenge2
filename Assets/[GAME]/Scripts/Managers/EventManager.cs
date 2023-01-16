@@ -10,6 +10,9 @@ public class EventManager : MonoBehaviour
     public static event Action PlatformStopped;
     public static event Action<Vector3> MovePlayer;
     public static event Action<float> MovePlayerForward;
+    public static event Action CheckGameCondition;
+    public static event Action LevelWin;
+    public static event Action LevelFailed;
 
     public static void GeneratePlatformEvent()
     {
@@ -34,5 +37,20 @@ public class EventManager : MonoBehaviour
     public static void MovePlayerForwardEvent(float dis)
     {
         MovePlayerForward?.Invoke(dis);
+    }
+
+    public static void CheckGameConditionEvent()
+    {
+        CheckGameCondition?.Invoke();
+    }
+
+    public static void LevelWinEvent()
+    {
+        LevelWin?.Invoke();
+    }
+
+    public static void LevelFailedEvent()
+    {
+        LevelFailed?.Invoke();
     }
 }

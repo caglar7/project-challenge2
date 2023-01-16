@@ -30,16 +30,8 @@ public class PlayerMover : MonoBehaviour
             if(Vector3.Distance(transform.position, targetPosition) <= radiusCheck)
             {
                 isReached = true;
-
-                // check continue, win or lose conditions
-                // ...
-
-                // trigger events       
-                EventManager.GeneratePlatformEvent();   // temp
-                EventManager.SetInputAvailableEvent(true);
-
-                // set idle animation
                 anim.TriggerAnimation(AnimationType.Idle);
+                EventManager.CheckGameConditionEvent();
             }
         }
     }
@@ -63,5 +55,15 @@ public class PlayerMover : MonoBehaviour
     private void RotateTowards(Vector3 dir, float duration)
     {
         transform.DORotateQuaternion(Quaternion.LookRotation(dir), duration);
+    }
+
+    public void FallDown(float jumpPower = 1f, float jumpDuration = 1f, float fallDis = 10f)
+    {
+        transform.DOJump(transform.position - (Vector3.up * fallDis), jumpPower, 1, jumpDuration)
+            .OnComplete(() => {
+                gameObject.SetActive(false);
+            });
+
+        anim.TriggerAnimation(AnimationType.Fall);
     }
 }

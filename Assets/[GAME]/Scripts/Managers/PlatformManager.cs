@@ -13,6 +13,12 @@ public class PlatformManager : MonoBehaviour
     [SerializeField] float zDiff = 1f;
     [SerializeField] Transform parentObject;
 
+    [Header("Finish Platform Settings")]
+    [SerializeField] Transform firstBlockPoint;
+    [SerializeField] Transform finishPlatform;
+    [Range(1, 20)][SerializeField] int blocksToFinish = 10;
+    int generatedPlatformCount = 1;
+
     [Header("Fields")]
     Vector3 nextSpawnPos;
     Vector3 nextScale;
@@ -28,6 +34,7 @@ public class PlatformManager : MonoBehaviour
     private void Start()
     {
         nextSpawnPos = startPoint.position;
+        SetFinishPosition();
         EventManager.GeneratePlatform += GeneratePlatform;
         EventManager.PlatformStopped += StopCurrentPlatform;
     }
@@ -37,6 +44,8 @@ public class PlatformManager : MonoBehaviour
     /// </summary>
     private void GeneratePlatform()
     {
+        if (generatedPlatformCount >= blocksToFinish) return;
+
         GameObject platform = PoolManager.instance.platformPool.PullObjFromPool();
         currentPlatform = platform.GetComponent<PlatformObject>();
         currentMover = platform.GetComponent<PlatformMover>();
@@ -44,6 +53,7 @@ public class PlatformManager : MonoBehaviour
         platform.transform.localScale = (nextScale != Vector3.zero) ? nextScale : platform.transform.localScale;
 
         currentMover.StartMoving(GetSpawnPos(), 1f);
+        generatedPlatformCount++;
     }
 
     /// <summary>
@@ -63,7 +73,9 @@ public class PlatformManager : MonoBehaviour
     /// </summary>
     private void StopCurrentPlatform()
     {
-        if(currentMover)
+        if (generatedPlatformCount >= blocksToFinish) return;
+
+        if (currentMover)
         {
             currentMover.StopMoving();
 
@@ -77,5 +89,10 @@ public class PlatformManager : MonoBehaviour
             if (playerNextPos == Vector3.zero) EventManager.MovePlayerForwardEvent(zDiff);
             else EventManager.MovePlayerEvent(playerNextPos);
         }
+    }
+
+    private void SetFinishPosition()
+    {
+        finishPlatform.position = firstBlockPoint.position + new Vector3(0f, 0f, (zDiff * (blocksToFinish - 1)));
     }
 }
