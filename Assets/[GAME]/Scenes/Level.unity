@@ -369,7 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initTarget: {fileID: 1256513130}
   jumpPower: 4.5
-  jumpDuration: 1.2
+  jumpDuration: 1.4
   fallDistance: 5
 --- !u!54 &924455882
 Rigidbody:
@@ -672,7 +672,7 @@ MonoBehaviour:
   parentObject: {fileID: 1426377148}
   firstBlockPoint: {fileID: 1256513130}
   finishPlatform: {fileID: 952716939}
-  blocksToFinish: 10
+  blocksToFinish: 8
 --- !u!114 &1007839755
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -30,7 +30,6 @@ public class PlayerMover : MonoBehaviour
             if(Vector3.Distance(transform.position, targetPosition) <= radiusCheck)
             {
                 isReached = true;
-                anim.TriggerAnimation(AnimationType.Idle);
                 EventManager.CheckGameConditionEvent();
             }
         }
@@ -49,7 +48,7 @@ public class PlayerMover : MonoBehaviour
         isReached = false;
         RotateTowards(dir, .5f);
 
-        anim.TriggerAnimation(AnimationType.Running);
+        PlayAnimation(AnimationType.Running);
     }
 
     private void RotateTowards(Vector3 dir, float duration)
@@ -65,5 +64,10 @@ public class PlayerMover : MonoBehaviour
             });
 
         anim.TriggerAnimation(AnimationType.Fall);
+    }
+
+    public void PlayAnimation(AnimationType type)
+    {
+        anim.TriggerAnimation(type);
     }
 }

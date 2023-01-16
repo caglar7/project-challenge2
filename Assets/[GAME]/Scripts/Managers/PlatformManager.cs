@@ -17,7 +17,7 @@ public class PlatformManager : MonoBehaviour
     [SerializeField] Transform firstBlockPoint;
     [SerializeField] Transform finishPlatform;
     [Range(1, 20)][SerializeField] int blocksToFinish = 10;
-    int generatedPlatformCount = 1;
+    int generatedPlatformCount = 0;
 
     [Header("Fields")]
     Vector3 nextSpawnPos;
@@ -93,6 +93,6 @@ public class PlatformManager : MonoBehaviour
 
     private void SetFinishPosition()
     {
-        finishPlatform.position = firstBlockPoint.position + new Vector3(0f, 0f, (zDiff * (blocksToFinish - 1)));
+        finishPlatform.position = firstBlockPoint.position + new Vector3(0f, 0f, (zDiff * blocksToFinish));
     }
 }

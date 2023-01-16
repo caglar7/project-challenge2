@@ -17,4 +17,5 @@ public enum AnimationType
     Running,
     Idle,
     Fall,
+    Dance,
 }
