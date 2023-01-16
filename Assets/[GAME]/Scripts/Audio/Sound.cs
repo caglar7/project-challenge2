@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
-    public string clipName;
+    public SoundType soundType;
     public AudioClip clip;
     [Range(0f, 1f)] public float volume;
     [Range(1f, 2f)] public float pitch;

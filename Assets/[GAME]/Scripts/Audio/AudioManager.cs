@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [Header("Note Settngs")]
+    [Range(0f, 1f)] public float noteVolume = 1f;
+    [Range(.1f, 2f)] public float notePitch = 1f;
+
     public Sound[] sounds;
     public static AudioManager instance;
+    private List<Sound> notes = new List<Sound>();
+    private int currentNote = 0;
 
     private void Awake()
     {
@@ -23,24 +29,42 @@ public class AudioManager : MonoBehaviour
             sound.audioSource.clip = sound.clip;
             sound.audioSource.volume = sound.volume;
             sound.audioSource.pitch = sound.pitch;
+            
+            if(sound.soundType == SoundType.Note)
+            {
+                sound.audioSource.volume = noteVolume;
+                sound.audioSource.pitch = notePitch;
+                notes.Add(sound);
+
+                Debug.Log("item: " + sound.clip.name);
+            }
         }
     }
 
-    public void PlayNote(float pitchRiseRatio = 0f)
+    public void PlayNextNote()
     {
-        Sound sound = Array.Find(sounds, s => s.clipName == SoundName.Note.ToString());
-        sound.audioSource.pitch += (sound.pitch * pitchRiseRatio);
-        sound.audioSource.Play();
+        notes[currentNote].audioSource.Play();
+        Debug.Log("playing" + notes[currentNote].clip.name);
+        currentNote = Mathf.Clamp(++currentNote, 0, notes.Count - 1);
+
+        // testin
+        //notes[0].audioSource.Play();
     }
-    
+
     public void ResetNote()
     {
-        Sound sound = Array.Find(sounds, s => s.clipName == SoundName.Note.ToString());
-        sound.audioSource.pitch = sound.pitch;
+        currentNote = 0;
+    }
+
+    public void SliceSound()
+    {
+        Sound s = Array.Find(sounds, s => s.soundType == SoundType.Sliced);
+        s.audioSource.pitch = UnityEngine.Random.Range(s.pitch - .1f, s.pitch + .1f);
+        s.audioSource.Play();
     }
 }
 
-public enum SoundName
+public enum SoundType
 {
     Note,
     Sliced,

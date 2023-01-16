@@ -53,10 +53,6 @@ public class Slicer : MonoBehaviour
             SliceMethod(sliceable, refBounds, movingBounds, disLeft, disRight);
         }
 
-        // testing
-        // play notes
-        AudioManager.instance.PlayNote(.1f);
-
         return resultScale;
     } 
     #endregion
@@ -79,6 +75,7 @@ public class Slicer : MonoBehaviour
 
         refObject = movingObject;
 
+        AudioManager.instance.PlayNextNote();
     }
 
     private void SliceMethod(IBzSliceable sliceable, Bounds refBounds, Bounds movingBounds, float disLeft, float disRight)
@@ -104,6 +101,9 @@ public class Slicer : MonoBehaviour
                 resultScale = cutObjects[0].GetComponent<MeshRenderer>().bounds.extents * 2f;
             }
         }
+
+        AudioManager.instance.ResetNote();
+        AudioManager.instance.SliceSound();
     }
 
     #endregion

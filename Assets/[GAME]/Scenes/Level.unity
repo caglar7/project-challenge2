@@ -904,7 +904,7 @@ MonoBehaviour:
   parentObject: {fileID: 1426377148}
   firstBlockPoint: {fileID: 1256513130}
   finishPlatform: {fileID: 952716939}
-  blocksToFinish: 10
+  blocksToFinish: 20
 --- !u!114 &1007839755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1090,11 +1090,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b9e7237f92aab439fcf84a4e512524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noteVolume: 0.3
+  notePitch: 1
   sounds:
-  - clipName: Note
-    clip: {fileID: 8300000, guid: 724f3f6001dcbd84abbfbaf3c2360109, type: 3}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: e39390020a1f274488f560d36e6343ee, type: 3}
     volume: 1
-    pitch: 2
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: dc4fe10db8feaf948930facb809bd7db, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: c56f25058dd65c042800e51a91dc972a, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: df1f929530f96fc4b850f9bceacd6d91, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: 1b7e255201867644d8159e7f043fc976, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: b613a20dc4cafd24fb327339a2760d48, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: 5a0f5e87a77c81b49b70337a10829ae6, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: 72cc871897243ff40b085a445936590f, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 0
+    clip: {fileID: 8300000, guid: be3ac8748b4969c4888dce657e0ffab1, type: 3}
+    volume: 1
+    pitch: 1
+    audioSource: {fileID: 0}
+  - soundType: 1
+    clip: {fileID: 8300000, guid: 5c6b7604d03289142a2eaba019d1309b, type: 3}
+    volume: 0.4
+    pitch: 1
     audioSource: {fileID: 0}
 --- !u!1 &1681860717
 GameObject:
