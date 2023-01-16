@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 248082899}
   - component: {fileID: 248082900}
+  - component: {fileID: 248082901}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -190,6 +191,20 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 453677266}
+--- !u!114 &248082901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248082898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d7b0ef9074c2742b5b92dcaad18f40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 100
+  lerpMult: 50
 --- !u!1 &453677265
 GameObject:
   m_ObjectHideFlags: 3
@@ -889,7 +904,7 @@ MonoBehaviour:
   parentObject: {fileID: 1426377148}
   firstBlockPoint: {fileID: 1256513130}
   finishPlatform: {fileID: 952716939}
-  blocksToFinish: 8
+  blocksToFinish: 3
 --- !u!114 &1007839755
 MonoBehaviour:
   m_ObjectHideFlags: 0
