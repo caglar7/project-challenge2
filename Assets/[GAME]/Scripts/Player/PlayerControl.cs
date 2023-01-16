@@ -79,6 +79,7 @@ public class PlayerControl : MonoBehaviour
         else                                                                    // level failed
         {
             mover.FallDown(jumpPower, jumpDuration, fallDistance);
+            CanvasController.instance.SwitchCanvas(CanvasType.FailMenu);
             EventManager.LevelFailedEvent();
             Debug.Log("Level Failed");
         }

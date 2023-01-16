@@ -17,7 +17,6 @@ public class EventManager : MonoBehaviour
     public static event Action LevelWin;
     public static event Action LevelFailed;
 
-
     public static void GeneratePlatformEvent()
     {
         GeneratePlatform?.Invoke();

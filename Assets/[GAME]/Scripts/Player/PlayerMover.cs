@@ -60,7 +60,7 @@ public class PlayerMover : MonoBehaviour
     {
         transform.DOJump(transform.position - (Vector3.up * fallDis), jumpPower, 1, jumpDuration)
             .OnComplete(() => {
-                gameObject.SetActive(false);
+                GetComponent<Rigidbody>().isKinematic = false; 
             });
 
         anim.TriggerAnimation(AnimationType.Fall);

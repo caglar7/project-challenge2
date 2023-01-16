@@ -105,7 +105,7 @@ public class Slicer : MonoBehaviour
         AudioManager.instance.ResetNote();
         AudioManager.instance.SliceSound();
     }
-
+    
     #endregion
 
     #region Get Sliced Objects
