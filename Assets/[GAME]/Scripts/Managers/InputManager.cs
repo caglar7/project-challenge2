@@ -28,4 +28,9 @@ public class InputManager : MonoBehaviour
     {
         isInputActive = value;
     }
+
+    private void OnDisable()
+    {
+        EventManager.SetInputAvailable -= SetInputActive;
+    }
 }

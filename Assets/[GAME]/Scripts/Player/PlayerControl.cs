@@ -54,6 +54,8 @@ public class PlayerControl : MonoBehaviour
     /// </summary>
     private void CheckGame()
     {
+        Debug.Log("check game condition");
+
         PlatformObject platformObject = CheckPlatform();
         FinishPlatform finishPlatform = CheckFinishPlatform();
         FinishPlatform finishPlatformFront = CheckFinishPlatformFront();
@@ -66,6 +68,7 @@ public class PlayerControl : MonoBehaviour
         else if(finishPlatform)                                                 // finish, level done
         {
             mover.PlayAnimation(AnimationType.Dance);
+            CanvasController.instance.SwitchCanvas(CanvasType.WinMenu);
             EventManager.LevelWinEvent();
             Debug.Log("Level Win");
         }
@@ -137,5 +140,12 @@ public class PlayerControl : MonoBehaviour
         GameObject clone = PoolManager.instance.platformPool.PullObjFromPool();
         zDiffValue = clone.GetComponent<MeshRenderer>().bounds.extents.z * 2f;
         PoolManager.instance.platformPool.AddObjToPool(clone);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.MovePlayer -= MoveToPosition;
+        EventManager.MovePlayerForward -= MoveForward;
+        EventManager.CheckGameCondition -= CheckGame;
     }
 }

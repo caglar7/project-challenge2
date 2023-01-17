@@ -46,4 +46,9 @@ public class CameraControl : MonoBehaviour
         var transposer = myCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         transposer.m_TrackedObjectOffset = Vector3.zero;
     }
+
+    private void OnDisable()
+    {
+        EventManager.LevelWin -= StartRotating;
+    }
 }

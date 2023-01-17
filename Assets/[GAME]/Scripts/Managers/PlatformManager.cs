@@ -10,14 +10,14 @@ public class PlatformManager : MonoBehaviour
 {
     [Header("Spawn Settings")]
     [SerializeField] Transform startPoint;
-    [SerializeField] float zDiff = 1f;
+    [SerializeField] float zDiff;
     [SerializeField] Transform parentObject;
 
     [Header("Finish Platform Settings")]
     [SerializeField] Transform firstBlockPoint;
     [SerializeField] Transform finishPlatform;
-    [Range(1, 20)][SerializeField] int blocksToFinish = 10;
-    int generatedPlatformCount = 0;
+    [Range(1, 20)][SerializeField] int blocksToFinish;
+    int generatedPlatformCount;
 
     [Header("Fields")]
     Vector3 nextSpawnPos;
@@ -25,6 +25,9 @@ public class PlatformManager : MonoBehaviour
     PlatformObject currentPlatform;
     PlatformMover currentMover;
     Slicer meshSlicer;
+
+    bool initPlatformSet = false;
+    public static int currentLevel;
 
     private void Awake()
     {
@@ -35,8 +38,14 @@ public class PlatformManager : MonoBehaviour
     {
         nextSpawnPos = startPoint.position;
         SetFinishPosition();
+        currentLevel++;
+        LevelCount.instance.tmpro.text = "Level " + currentLevel.ToString();
+        SetFirstPlatformScale();
+
         EventManager.GeneratePlatform += GeneratePlatform;
         EventManager.PlatformStopped += StopCurrentPlatform;
+        EventManager.LevelWin += SaveScaleXData;
+        EventManager.LevelFailed += ResetValues;
     }
 
     /// <summary>
@@ -51,6 +60,7 @@ public class PlatformManager : MonoBehaviour
         currentMover = platform.GetComponent<PlatformMover>();
         platform.transform.SetParent(parentObject);
         platform.transform.localScale = (nextScale != Vector3.zero) ? nextScale : platform.transform.localScale;
+        SetInitPlatformScale(platform);
 
         currentMover.StartMoving(GetSpawnPos(), 1f);
         generatedPlatformCount++;
@@ -79,9 +89,6 @@ public class PlatformManager : MonoBehaviour
         {
             currentMover.StopMoving();
 
-            // slice here and give a pos for player to go
-            // if slice fails and entire cube falls, player just go +zDiff
-
             // slice, get scale for next object spawn
             nextScale = meshSlicer.SliceObject(currentPlatform.gameObject);
             Vector3 playerNextPos = meshSlicer.RemainingObjectPosition();
@@ -94,5 +101,51 @@ public class PlatformManager : MonoBehaviour
     private void SetFinishPosition()
     {
         finishPlatform.position = firstBlockPoint.position + new Vector3(0f, 0f, (zDiff * blocksToFinish));
+    }
+
+    private void OnDisable()
+    {
+        EventManager.GeneratePlatform -= GeneratePlatform;
+        EventManager.PlatformStopped -= StopCurrentPlatform;
+        EventManager.LevelWin -= SaveScaleXData;
+    }
+
+    /// <summary>
+    /// called after set level count
+    /// </summary>
+    private void SetInitPlatformScale(GameObject g)
+    {
+        if(initPlatformSet == false && currentLevel > 1)
+        {
+            initPlatformSet = true;
+            Vector3 scale = g.transform.localScale;
+            scale.x = PlayerPrefs.GetFloat("ScaleX");
+            g.transform.localScale = scale;
+            firstBlockPoint.localScale = scale;
+        }
+    }
+
+    private void SetFirstPlatformScale()
+    {
+        if(currentLevel > 1)
+        {
+            Vector3 scale = firstBlockPoint.localScale;
+            scale.x = PlayerPrefs.GetFloat("ScaleX");
+            firstBlockPoint.localScale = scale;
+        }
+    }
+
+    private void SaveScaleXData()
+    {
+        PlayerPrefs.SetFloat("ScaleX", nextScale.x);
+    }
+
+    private void ResetValues()
+    {
+        GameObject clone = PoolManager.instance.platformPool.PullObjFromPool();
+        float scaleX = clone.transform.localScale.x;
+        PlayerPrefs.SetFloat("ScaleX", scaleX);
+        PoolManager.instance.platformPool.AddObjToPool(clone);
+        currentLevel = 0;
     }
 }

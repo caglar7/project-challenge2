@@ -6,6 +6,11 @@ public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
+    private void Start()
+    {
+        Debug.Log("Player Animation start");
+    }
+
     public void TriggerAnimation(AnimationType type)
     {
         animator.SetTrigger(type.ToString());

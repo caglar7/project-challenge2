@@ -35,8 +35,6 @@ public class AudioManager : MonoBehaviour
                 sound.audioSource.volume = noteVolume;
                 sound.audioSource.pitch = notePitch;
                 notes.Add(sound);
-
-                Debug.Log("item: " + sound.clip.name);
             }
         }
     }
@@ -44,11 +42,7 @@ public class AudioManager : MonoBehaviour
     public void PlayNextNote()
     {
         notes[currentNote].audioSource.Play();
-        Debug.Log("playing" + notes[currentNote].clip.name);
         currentNote = Mathf.Clamp(++currentNote, 0, notes.Count - 1);
-
-        // testin
-        //notes[0].audioSource.Play();
     }
 
     public void ResetNote()

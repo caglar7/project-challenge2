@@ -21,6 +21,11 @@ public class PlayerMover : MonoBehaviour
         anim = GetComponent<PlayerAnimation>();
     }
 
+    private void Start()
+    {
+        Debug.Log("Player Mover start");
+    }
+
     private void Update()
     {
         if(!isReached)
@@ -29,6 +34,8 @@ public class PlayerMover : MonoBehaviour
 
             if(Vector3.Distance(transform.position, targetPosition) <= radiusCheck)
             {
+                Debug.Log("reach target");
+
                 isReached = true;
                 EventManager.CheckGameConditionEvent();
             }
@@ -60,7 +67,9 @@ public class PlayerMover : MonoBehaviour
     {
         transform.DOJump(transform.position - (Vector3.up * fallDis), jumpPower, 1, jumpDuration)
             .OnComplete(() => {
-                GetComponent<Rigidbody>().isKinematic = false; 
+                GetComponent<Rigidbody>().isKinematic = false;
+
+                Debug.Log("fell down");
             });
 
         anim.TriggerAnimation(AnimationType.Fall);
