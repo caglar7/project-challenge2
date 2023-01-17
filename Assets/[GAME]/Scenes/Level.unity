@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  radiusCheck: 0.2
+  radiusCheck: 0.05
 --- !u!114 &924455881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1962,6 +1962,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1426377148}
     m_Modifications:
+    - target: {fileID: 1500160862832739476, guid: 243ee309e1fa0ae499d7f5ac01067485, type: 3}
+      propertyPath: setInitColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9222837379373316148, guid: 243ee309e1fa0ae499d7f5ac01067485, type: 3}
       propertyPath: m_Name
       value: FirstPlatform
@@ -2092,7 +2096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b9e7237f92aab439fcf84a4e512524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteVolume: 0.3
+  noteVolume: 0.35
   notePitch: 1
   sounds:
   - soundType: 0

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Platform generating, slicing methods
+/// Platform generating, platform controls, mesh scaling etc.
 /// </summary>
 
 public class PlatformManager : MonoBehaviour
 {
+    #region Properties
     [Header("Spawn Settings")]
     [SerializeField] Transform startPoint;
     [SerializeField] float zDiff;
@@ -16,7 +17,7 @@ public class PlatformManager : MonoBehaviour
     [Header("Finish Platform Settings")]
     [SerializeField] Transform firstBlockPoint;
     [SerializeField] Transform finishPlatform;
-    [Range(1, 20)][SerializeField] int blocksToFinish;
+    [Range(1, 20)] [SerializeField] int blocksToFinish;
     int generatedPlatformCount;
 
     [Header("Fields")]
@@ -28,7 +29,9 @@ public class PlatformManager : MonoBehaviour
 
     bool initPlatformSet = false;
     public static int currentLevel;
+    #endregion
 
+    #region Awake, Start
     private void Awake()
     {
         meshSlicer = GetComponent<Slicer>();
@@ -47,7 +50,9 @@ public class PlatformManager : MonoBehaviour
         EventManager.LevelWin += SaveScaleXData;
         EventManager.LevelFailed += ResetValues;
     }
+    #endregion
 
+    #region Platform Spawning and Control
     /// <summary>
     /// called with generate event
     /// </summary>
@@ -61,6 +66,7 @@ public class PlatformManager : MonoBehaviour
         platform.transform.SetParent(parentObject);
         platform.transform.localScale = (nextScale != Vector3.zero) ? nextScale : platform.transform.localScale;
         SetInitPlatformScale(platform);
+        platform.GetComponent<PlatformColor>().SetColor(generatedPlatformCount);
 
         currentMover.StartMoving(GetSpawnPos(), 1f);
         generatedPlatformCount++;
@@ -76,7 +82,7 @@ public class PlatformManager : MonoBehaviour
         nextSpawnPos.x = -nextSpawnPos.x;
         nextSpawnPos.z += zDiff;
         return pos;
-    }
+    } 
 
     /// <summary>
     /// on input tap, stop the currently moving platform
@@ -90,7 +96,7 @@ public class PlatformManager : MonoBehaviour
             currentMover.StopMoving();
 
             // slice, get scale for next object spawn
-            nextScale = meshSlicer.SliceObject(currentPlatform.gameObject);
+            nextScale = meshSlicer.SliceObject(currentPlatform.gameObject, generatedPlatformCount);
             Vector3 playerNextPos = meshSlicer.RemainingObjectPosition();
 
             if (playerNextPos == Vector3.zero) EventManager.MovePlayerForwardEvent(zDiff);
@@ -98,24 +104,26 @@ public class PlatformManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// finish platform position adjust based on preferences
+    /// # of blocks
+    /// </summary>
     private void SetFinishPosition()
     {
         finishPlatform.position = firstBlockPoint.position + new Vector3(0f, 0f, (zDiff * blocksToFinish));
     }
+    #endregion
 
-    private void OnDisable()
-    {
-        EventManager.GeneratePlatform -= GeneratePlatform;
-        EventManager.PlatformStopped -= StopCurrentPlatform;
-        EventManager.LevelWin -= SaveScaleXData;
-    }
+    #region Init Methods
 
     /// <summary>
-    /// called after set level count
+    /// after loading next level, get scale value of last platform
+    /// so level starts with proper platform scale
     /// </summary>
+    /// <param name="g"></param>
     private void SetInitPlatformScale(GameObject g)
     {
-        if(initPlatformSet == false && currentLevel > 1)
+        if (initPlatformSet == false && currentLevel > 1)
         {
             initPlatformSet = true;
             Vector3 scale = g.transform.localScale;
@@ -125,9 +133,14 @@ public class PlatformManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// block that player moves at first, 
+    /// added the platform just for the visuals
+    /// but it needs to remember the last scaleX value
+    /// </summary>
     private void SetFirstPlatformScale()
     {
-        if(currentLevel > 1)
+        if (currentLevel > 1)
         {
             Vector3 scale = firstBlockPoint.localScale;
             scale.x = PlayerPrefs.GetFloat("ScaleX");
@@ -140,6 +153,10 @@ public class PlatformManager : MonoBehaviour
         PlayerPrefs.SetFloat("ScaleX", nextScale.x);
     }
 
+    /// <summary>
+    /// get a reference object from platform pool and init scale data
+    /// triggers when level fails, so game will start over
+    /// </summary>
     private void ResetValues()
     {
         GameObject clone = PoolManager.instance.platformPool.PullObjFromPool();
@@ -148,4 +165,15 @@ public class PlatformManager : MonoBehaviour
         PoolManager.instance.platformPool.AddObjToPool(clone);
         currentLevel = 0;
     }
+    #endregion
+
+    #region Disable Listeners
+
+    private void OnDisable()
+    {
+        EventManager.GeneratePlatform -= GeneratePlatform;
+        EventManager.PlatformStopped -= StopCurrentPlatform;
+        EventManager.LevelWin -= SaveScaleXData;
+    } 
+    #endregion
 }

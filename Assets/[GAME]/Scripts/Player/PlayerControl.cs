@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///  player controller
+/// </summary>
+
 public class PlayerControl : MonoBehaviour
 {
+    #region Properties
     [Header("Initial Settings")]
     [SerializeField] Transform initTarget;
-
-    //[Header("Win Settings")]
 
     [Header("Fail Settings")]
     [SerializeField] float jumpPower;
@@ -17,7 +20,9 @@ public class PlayerControl : MonoBehaviour
     [Header("Fields")]
     PlayerMover mover;
     float zDiffValue;
+    #endregion
 
+    #region Awake, Start
     private void Awake()
     {
         mover = GetComponent<PlayerMover>();
@@ -31,7 +36,9 @@ public class PlayerControl : MonoBehaviour
         EventManager.MovePlayerForward += MoveForward;
         EventManager.CheckGameCondition += CheckGame;
     }
+    #endregion
 
+    #region Move Methods
     private void MoveToPosition(Vector3 pos)
     {
         mover.Move(pos);
@@ -43,39 +50,34 @@ public class PlayerControl : MonoBehaviour
         pos.z += dis;
         mover.Move(pos);
     }
+    #endregion
 
+    #region Check Game Method
     /// <summary>
-    /// 3 conditions for game
-    /// 
-    /// continue
-    /// win
-    /// fail
-    /// 
+    /// game conditions when player reached to next spot 
     /// </summary>
     private void CheckGame()
     {
-        Debug.Log("check game condition");
-
         PlatformObject platformObject = CheckPlatform();
         FinishPlatform finishPlatform = CheckFinishPlatform();
         FinishPlatform finishPlatformFront = CheckFinishPlatformFront();
 
-        if(platformObject && finishPlatformFront)                               // next block is finish
+        if (platformObject && finishPlatformFront)                               // next block is finish
         {
             mover.Move(transform.position + new Vector3(0f, 0f, zDiffValue));
             Debug.Log("Finish is next");
         }
-        else if(finishPlatform)                                                 // finish, level done
+        else if (finishPlatform)                                                 // finish, level done
         {
             mover.PlayAnimation(AnimationType.Dance);
             CanvasController.instance.SwitchCanvas(CanvasType.WinMenu);
             EventManager.LevelWinEvent();
             Debug.Log("Level Win");
         }
-        else if(platformObject)                                                 // continue game                                
+        else if (platformObject)                                                 // continue game                                
         {
             mover.PlayAnimation(AnimationType.Idle);
-            EventManager.GeneratePlatformEvent();   
+            EventManager.GeneratePlatformEvent();
             EventManager.SetInputAvailableEvent(true);
             Debug.Log("Continue");
         }
@@ -86,9 +88,10 @@ public class PlayerControl : MonoBehaviour
             EventManager.LevelFailedEvent();
             Debug.Log("Level Failed");
         }
-    }
-    
-    #region Level Condition Checks
+    } 
+    #endregion
+
+    #region Check Platform Below Player
 
     private PlatformObject CheckPlatform(float checkDis = 1f)
     {
@@ -131,21 +134,24 @@ public class PlayerControl : MonoBehaviour
             if (obj) break;
         }
         return obj;
-    } 
+    }
     #endregion
 
-
+    #region Init Methods
     private void SetDiffZ()
     {
         GameObject clone = PoolManager.instance.platformPool.PullObjFromPool();
         zDiffValue = clone.GetComponent<MeshRenderer>().bounds.extents.z * 2f;
         PoolManager.instance.platformPool.AddObjToPool(clone);
-    }
+    } 
+    #endregion
 
+    #region Disable Listeners
     private void OnDisable()
     {
         EventManager.MovePlayer -= MoveToPosition;
         EventManager.MovePlayerForward -= MoveForward;
         EventManager.CheckGameCondition -= CheckGame;
-    }
+    } 
+    #endregion
 }

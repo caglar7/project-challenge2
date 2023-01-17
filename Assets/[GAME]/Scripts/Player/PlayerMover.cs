@@ -9,39 +9,37 @@ using DG.Tweening;
 
 public class PlayerMover : MonoBehaviour
 {
-    [SerializeField] float speed = 5f;
-    [SerializeField] float radiusCheck = .2f;
-    bool isReached = true;
-    Vector3 dir;
-    Vector3 targetPosition;
-    PlayerAnimation anim;
+    #region Properties
 
+    [SerializeField] float speed;
+    [SerializeField] float radiusCheck;
+    bool isReached = true;
+    Vector3 dir, targetPosition;
+    PlayerAnimation anim;
+    #endregion
+
+    #region Awake, Update
     private void Awake()
     {
         anim = GetComponent<PlayerAnimation>();
     }
 
-    private void Start()
-    {
-        Debug.Log("Player Mover start");
-    }
-
     private void Update()
     {
-        if(!isReached)
+        if (!isReached)
         {
             transform.position += (dir * speed * Time.deltaTime);
 
-            if(Vector3.Distance(transform.position, targetPosition) <= radiusCheck)
+            if (Vector3.Distance(transform.position, targetPosition) <= radiusCheck)
             {
-                Debug.Log("reach target");
-
                 isReached = true;
                 EventManager.CheckGameConditionEvent();
             }
         }
     }
+    #endregion
 
+    #region Movement Related
     /// <summary>
     /// move to position, called from PlayerControl.cs
     /// </summary>
@@ -62,14 +60,16 @@ public class PlayerMover : MonoBehaviour
     {
         transform.DORotateQuaternion(Quaternion.LookRotation(dir), duration);
     }
+    #endregion
+
+    #region Other Methods
 
     public void FallDown(float jumpPower = 1f, float jumpDuration = 1f, float fallDis = 10f)
     {
         transform.DOJump(transform.position - (Vector3.up * fallDis), jumpPower, 1, jumpDuration)
-            .OnComplete(() => {
+            .OnComplete(() =>
+            {
                 GetComponent<Rigidbody>().isKinematic = false;
-
-                Debug.Log("fell down");
             });
 
         anim.TriggerAnimation(AnimationType.Fall);
@@ -78,5 +78,6 @@ public class PlayerMover : MonoBehaviour
     public void PlayAnimation(AnimationType type)
     {
         anim.TriggerAnimation(type);
-    }
+    } 
+    #endregion
 }

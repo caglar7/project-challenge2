@@ -11,8 +11,8 @@ public class Slicer : MonoBehaviour
 {
     #region Properties
     [SerializeField] GameObject refObject;
-    [SerializeField] float perfectThreshold = .2f;
-    [SerializeField] float failThreshold = .1f;
+    [SerializeField] float perfectThreshold;
+    [SerializeField] float failThreshold;
     List<Transform> cutObjects = new List<Transform>();
     Vector3 resultScale; 
     #endregion
@@ -26,7 +26,7 @@ public class Slicer : MonoBehaviour
     /// </summary>
     /// <param name="movingObject"> the object that was moving and stopped to slice </param>
     /// <returns> scale of remaining platform for platform generator </returns>
-    public Vector3 SliceObject(GameObject movingObject)
+    public Vector3 SliceObject(GameObject movingObject, int colorIndex)
     {
         resultScale = movingObject.transform.localScale;
 
@@ -50,7 +50,7 @@ public class Slicer : MonoBehaviour
         }
         else
         {
-            SliceMethod(sliceable, refBounds, movingBounds, disLeft, disRight);
+            SliceMethod(sliceable, refBounds, movingBounds, disLeft, disRight, colorIndex);
         }
 
         return resultScale;
@@ -78,16 +78,18 @@ public class Slicer : MonoBehaviour
         AudioManager.instance.PlayNextNote();
     }
 
-    private void SliceMethod(IBzSliceable sliceable, Bounds refBounds, Bounds movingBounds, float disLeft, float disRight)
+    private void SliceMethod(IBzSliceable sliceable, Bounds refBounds, Bounds movingBounds, float disLeft, float disRight, int c)
     {
         if (movingBounds.center.x < refBounds.center.x)
         {
             sliceable.Slice(new Plane(Vector3.right, -disLeft), SetCutObjects);
             if (cutObjects.Count > 0)
             {
-                cutObjects[0].GetComponent<Rigidbody>().isKinematic = false;    // later method, handle fallen obj
+                HandleFallenObject(cutObjects[0].GetComponent<Rigidbody>());
+
                 refObject = cutObjects[1].gameObject;
                 resultScale = cutObjects[1].GetComponent<MeshRenderer>().bounds.extents * 2f;
+                
             }
         }
 
@@ -96,16 +98,29 @@ public class Slicer : MonoBehaviour
             sliceable.Slice(new Plane(Vector3.right, -disRight), SetCutObjects);
             if (cutObjects.Count > 0)
             {
-                cutObjects[1].GetComponent<Rigidbody>().isKinematic = false;
+                HandleFallenObject(cutObjects[1].GetComponent<Rigidbody>());
+
                 refObject = cutObjects[0].gameObject;
                 resultScale = cutObjects[0].GetComponent<MeshRenderer>().bounds.extents * 2f;
             }
         }
 
+        if(cutObjects.Count == 2)
+        {
+            c--;
+            cutObjects[0].GetComponent<PlatformColor>().SetColor(c);
+            cutObjects[1].GetComponent<PlatformColor>().SetColor(c);
+        }
+
         AudioManager.instance.ResetNote();
         AudioManager.instance.SliceSound();
     }
-    
+
+    private void HandleFallenObject(Rigidbody rb)
+    {
+        rb.isKinematic = false;
+    }
+
     #endregion
 
     #region Get Sliced Objects

@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// animation component
+/// </summary>
+
 public class PlayerAnimation : MonoBehaviour
 {
+    #region Properties
     [SerializeField] Animator animator;
+    #endregion
 
-    private void Start()
-    {
-        Debug.Log("Player Animation start");
-    }
-
+    #region Methods
     public void TriggerAnimation(AnimationType type)
     {
         animator.SetTrigger(type.ToString());
-    }
+    } 
+    #endregion
 }
 
 public enum AnimationType

@@ -17,8 +17,8 @@ public enum CanvasType
 }
 
 public class CanvasController : MonoBehaviour
-{ 
-    SubCanvas[] subCanvases;
+{
+    #region Singleton Canvas
     public static CanvasController instance;
     private void Awake()
     {
@@ -26,7 +26,14 @@ public class CanvasController : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
 
         subCanvases = GetComponentsInChildren<SubCanvas>(true);
-    }
+    } 
+    #endregion
+
+    #region Properties
+    SubCanvas[] subCanvases;
+    #endregion
+
+    #region Switch Canvas Method
 
     /// <summary>
     /// deactive canvases and activate the next one
@@ -34,10 +41,11 @@ public class CanvasController : MonoBehaviour
     /// <param name="startCanvas"></param>
     public void SwitchCanvas(CanvasType startCanvas)
     {
-        foreach(SubCanvas sub in subCanvases)
+        foreach (SubCanvas sub in subCanvases)
         {
             if (sub.canvasType == startCanvas) sub.gameObject.SetActive(true);
             else sub.gameObject.SetActive(false);
         }
-    }
+    } 
+    #endregion
 }

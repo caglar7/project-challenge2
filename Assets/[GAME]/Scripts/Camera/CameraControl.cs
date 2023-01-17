@@ -4,15 +4,19 @@ using UnityEngine;
 using Cinemachine;
 
 /// <summary>
-///  start rotation when level win event trigger
+///  cinemachine camera control, rotation etc.
 /// </summary>
 
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField] float rotationSpeed = 100f;
-    [SerializeField] float lerpMult = 10f;
+    #region Properties
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float lerpMult;
     bool isRotating = false;
     CinemachineVirtualCamera myCamera;
+    #endregion
+
+    #region Awake, Update
 
     private void Awake()
     {
@@ -22,23 +26,20 @@ public class CameraControl : MonoBehaviour
 
     private void Update()
     {
-        if(isRotating)
+        if (isRotating)
         {
             Vector3 rot = transform.eulerAngles;
             rot += new Vector3(0f, rotationSpeed * Time.deltaTime, 0f);
             transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, rot, Time.deltaTime * lerpMult);
         }
     }
+    #endregion
 
+    #region Camera Methods, Rotation, Offset Reset
     private void StartRotating()
     {
         ResetOffset();
         isRotating = true;
-    }
-
-    private void StopRotating()
-    {
-        isRotating = false;
     }
 
     private void ResetOffset()
@@ -46,9 +47,13 @@ public class CameraControl : MonoBehaviour
         var transposer = myCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         transposer.m_TrackedObjectOffset = Vector3.zero;
     }
+    #endregion
+
+    #region Remove Listeners on disable
 
     private void OnDisable()
     {
         EventManager.LevelWin -= StartRotating;
-    }
+    } 
+    #endregion
 }

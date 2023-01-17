@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Event Manager
+/// </summary>
+
 public class EventManager : MonoBehaviour
 {
+    #region Events
     // game play events
     public static event Action GeneratePlatform;    // when player moves to spot and checks
     public static event Action<bool> SetInputAvailable;
@@ -16,7 +21,9 @@ public class EventManager : MonoBehaviour
     public static event Action CheckGameCondition;
     public static event Action LevelWin;
     public static event Action LevelFailed;
+    #endregion
 
+    #region Invoke Methods
     public static void GeneratePlatformEvent()
     {
         GeneratePlatform?.Invoke();
@@ -55,5 +62,6 @@ public class EventManager : MonoBehaviour
     public static void LevelFailedEvent()
     {
         LevelFailed?.Invoke();
-    }
+    } 
+    #endregion
 }

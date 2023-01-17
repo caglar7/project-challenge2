@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// moving left and right, init start pos
+/// platform movement component
 /// </summary>
 
 public class PlatformMover : MonoBehaviour
 {
-    [SerializeField] float maxSpeed = 5f;
-    float speed = 1f;
-    bool isMoving = false;
+    #region Properties
+    [SerializeField] float maxSpeed;
+    float speed, boundPositive, boundNegative;
+    bool isMoving = false, canSetDir = true;
     Vector3 dir;
-    float boundPositive, boundNegative;
-    bool canSetDir = true;
-    float setDirOnTime = .2f;
+    #endregion
 
+    #region Update
     private void Update()
     {
-        if(isMoving)
+        if (isMoving)
         {
             transform.position += (dir * speed * Time.deltaTime);
             if (transform.position.x >= boundPositive || transform.position.x <= boundNegative)
@@ -35,10 +35,12 @@ public class PlatformMover : MonoBehaviour
 
     IEnumerator SetDirOnTimeCo()
     {
-        yield return new WaitForSeconds(setDirOnTime);
+        yield return new WaitForSeconds(.2f);
         canSetDir = true;
     }
+    #endregion
 
+    #region Methods
     /// <summary>
     /// init diri movement settings
     /// <param name="startPos"> start at left and right </param>
@@ -57,5 +59,6 @@ public class PlatformMover : MonoBehaviour
     public void StopMoving()
     {
         isMoving = false;
-    }
+    } 
+    #endregion
 }

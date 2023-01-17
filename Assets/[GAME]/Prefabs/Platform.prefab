@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8498916324330486381}
   - component: {fileID: 3616939122299592350}
   - component: {fileID: 1654266764504084884}
+  - component: {fileID: 1500160862832739476}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -64,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a3f65138ba8a675438e7191cd4351bfe, type: 2}
+  - {fileID: 2100000, guid: 57cff7f5c0bb3c14c935e63f1fcce3a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6043e6b8b852d8543a258b0e2f514f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSliceMaterial: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  defaultSliceMaterial: {fileID: 2100000, guid: 57cff7f5c0bb3c14c935e63f1fcce3a0, type: 2}
   asynchronously: 0
   useLazyRunner: 0
 --- !u!114 &3616939122299592350
@@ -155,3 +156,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 5
+--- !u!114 &1500160862832739476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9222837379373316148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665e20fd739bb8c40a07c253a6cbd7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colors:
+  - {r: 0.31217512, g: 0.745283, b: 0.3183307, a: 1}
+  - {r: 0.7830189, g: 0.32059452, b: 0.32059452, a: 1}
+  - {r: 0.29355645, g: 0.62898517, b: 0.7169812, a: 1}
+  - {r: 0.7075472, g: 0.26299393, b: 0.5381154, a: 1}
+  - {r: 0.63463897, g: 0.6415094, b: 0.2687077, a: 1}
+  - {r: 0.9528302, g: 0.6160089, b: 0.28225344, a: 1}
+  setInitColor: 0

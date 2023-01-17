@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///  my custom pool class
+/// </summary>
+
+
 public class PoolingPattern
 {
     private GameObject prefab;

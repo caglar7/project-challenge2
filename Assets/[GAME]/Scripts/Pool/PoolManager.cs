@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// pool manager
+/// </summary>
+
 public class PoolManager : MonoBehaviour
 {
     #region Singleton
